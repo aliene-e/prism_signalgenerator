@@ -1,0 +1,16 @@
+This document will include the following: 
+- Notes about how Python works
+- Notes about how the project contributes to the system at Fermilab
+- A "journal" of sorts documenting the general things I did on any given day
+
+Thursday 7/16/2026
+    Overview: Set up VSCode + Git + Cline + any other necessary software, added user input to blink program
+
+    Python notes: 
+    - try / except not fundamental to while loops; just necessary if you want to handle errors that could happen (you handle them by anticipating what the error might be with the "except")
+    - to get user input, just set variable = input("Prompt")
+
+    Question: With my current code, pressing Ctrl+C when it's blinking will pretend I already made an invalid input. Why does that happen and how can I fix it?
+
+    New task/idea: link the blinking program to the temperature program (maybe for whatever temperature it is blink faster at higher temps and slower at lower temps). Temp (F)/60 = freq (Hz)? The temperature readout happens very often though so might be a little too fast for that?
+
