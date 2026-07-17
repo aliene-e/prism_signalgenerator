@@ -14,3 +14,12 @@ Thursday 7/16/2026
 
     New task/idea: link the blinking program to the temperature program (maybe for whatever temperature it is blink faster at higher temps and slower at lower temps). Temp (F)/60 = freq (Hz)? The temperature readout happens very often though so might be a little too fast for that?
 
+Friday 7/17/2026
+
+    Pico Board Notes
+    - IDC, ADC, Pinout, 
+
+    Task: write main function to communicate with clock and ... min = 8 kHz, max = 160 MHz
+    - ID of board: SI5351 signal generator
+    - connected SCL and SDA pins 7 and 6 respectively
+    - set clock 0 to freq (50MHz)
