@@ -18,7 +18,6 @@ PLL_MULT, PLL_NUM, PLL_DENOM = 32, 0, 1
 # CLK0 target. 800 MHz / (14 + 102/107) = 53.5 MHz
 OUT_DIV, OUT_NUM, OUT_DENOM = 14, 102, 107
 
-
 def main():
     i2c = I2C(I2C_ID, sda=Pin(SDA_PIN), scl=Pin(SCL_PIN), freq=I2C_FREQ)
     
