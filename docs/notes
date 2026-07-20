@@ -23,3 +23,16 @@ Friday 7/17/2026
     - ID of board: SI5351 signal generator
     - connected SCL and SDA pins 7 and 6 respectively
     - set clock 0 to freq (50MHz)
+
+
+Monday 7/20/2026
+    - sketch of what we are working on
+    - polish the secondary tasks from last week, watch videos, find python tutorial (get python experience)
+
+    NOTES:
+    - PLL = phase-locked loop. VCO = Voltage Controlled Oscillator. Booster does RF Sweep... goes from 36 to 53 MHz over 33ms.. Limited by the bandwidth of the I2C bus.. time budget ... we use 6 sig figs
+    - Output = 25MHz * PLLMultiplier/d/rdiv (rdiv is always 1 in our case)
+    - For our sakes we should just bound below by 500 kHz... and use powers of 2
+    - Favor 900MHz to make it deterministic (so if we ran it multiple times we should get the same output multiple times)
+    - d = 900/target (so like.. roughly the quotient)
+    - VCO = d * target (what happens when you multiply the approx. quotient and target ... in 600-900 MHz)

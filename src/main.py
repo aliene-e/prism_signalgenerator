@@ -4,6 +4,8 @@
 
 from machine import Pin, I2C
 from SI5351 import SI5351
+import si5351_solver
+
 
   # --- board / chip constants ---
 SDA_PIN, SCL_PIN = 4, 5          # GP4 / GP5  (NOT physical pins 4/5)
@@ -13,10 +15,10 @@ SI5351_ADDR      = 0x60
 XTAL_HZ          = 25_000_000
 
 # PLLA: VCO = PLL_MULT * XTAL = 32 * 25 MHz = 800 MHz
-PLL_MULT, PLL_NUM, PLL_DENOM = 32, 0, 1
+# PLL_MULT, PLL_NUM, PLL_DENOM = 32, 0, 1
 
 # CLK0 target. 800 MHz / (14 + 102/107) = 53.5 MHz
-OUT_DIV, OUT_NUM, OUT_DENOM = 14, 102, 107
+# OUT_DIV, OUT_NUM, OUT_DENOM = 14, 102, 107
 
 def main():
     i2c = I2C(I2C_ID, sda=Pin(SDA_PIN), scl=Pin(SCL_PIN), freq=I2C_FREQ)
@@ -29,13 +31,16 @@ def main():
             "-> check power, GND, and that SDA/SCL are on GP4/GP5.")
         return
 
+    target_freq = int(input("Enter target frequency in Hz (e.g. 53500000): "))
+    result = si5351_solver.solve(target_freq)
+    
     # 2. Construct + initialize the chip (powers down all outputs, sets xtal load).
     si = SI5351(i2c, address=SI5351_ADDR, crystalFreq=XTAL_HZ)
     si.begin()
 
     # 3. PLLA to 800 MHz, then CLK0 divider to hit 53.5 MHz.
-    si.setupPLL(PLL_MULT, PLL_NUM, PLL_DENOM)
-    si.setupMultisynth(0, OUT_DIV, OUT_NUM, OUT_DENOM, pllsource="A")
+    si.setupPLL(result[0], result[1], result[2])
+    si.setupMultisynth(0, result[3],0, 1, pllsource="A")
 
     # 4. Latch the new dividers and turn the outputs on.
     si.PLLsoftreset()
