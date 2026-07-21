@@ -34,5 +34,14 @@ Monday 7/20/2026
     - Output = 25MHz * PLLMultiplier/d/rdiv (rdiv is always 1 in our case)
     - For our sakes we should just bound below by 500 kHz... and use powers of 2
     - Favor 900MHz to make it deterministic (so if we ran it multiple times we should get the same output multiple times)
-    - d = 900/target (so like.. roughly the quotient)
-    - VCO = d * target (what happens when you multiply the approx. quotient and target ... in 600-900 MHz)
+    - d = 900/target (roughly the quotient)
+    - VCO = d * target (what happens when you multiply the approx. quotient and target ... should be in 600-900 MHz range)
+
+    ...
+    - eventually we want to be able to see if we can discern between small gaps like 30.5 vs 30.6? And can we blindly test a min/max? 
+    Pi Pico PIO.. multichannel
+
+    Notes about what the signal generator actually does:
+    - 30.5 MHz is the frequency used for the FAST/IOTA. RF frequency of the beam in fast/iota.  in BPMs or any instruemnt we want to give reference signals to start the chain of digital signals... boosters and main injector ramps from 36-53 and 53.6....-53.6....... the machines we are targeting are BPMs for FAST/IOTA... PIO we will use to target slow frequencies (SI5351 favors high frequencies)... "bit-banging" basically turning GPIO pin high and low at 10Hz or other low frequencies
+    - clock board attached to pico board, which is attached to a trigger.. ADC = analog-digital converter, DAC = digital-analog converter. no DAC but there is ADC :D
+    

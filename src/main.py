@@ -4,7 +4,7 @@
 
 from machine import Pin, I2C
 from SI5351 import SI5351
-import si5351_solver
+from si5351_solver import solve
 
 
   # --- board / chip constants ---
@@ -32,7 +32,7 @@ def main():
         return
 
     target_freq = int(input("Enter target frequency in Hz (e.g. 53500000): "))
-    result = si5351_solver.solve(target_freq)
+    result = solve(target_freq)
     
     # 2. Construct + initialize the chip (powers down all outputs, sets xtal load).
     si = SI5351(i2c, address=SI5351_ADDR, crystalFreq=XTAL_HZ)
