@@ -20,15 +20,25 @@ XTAL_HZ          = 25_000_000
 # CLK0 target. 800 MHz / (14 + 102/107) = 53.5 MHz
 # OUT_DIV, OUT_NUM, OUT_DENOM = 14, 102, 107
 
-def main():
+def init():
     i2c = I2C(I2C_ID, sda=Pin(SDA_PIN), scl=Pin(SCL_PIN), freq=I2C_FREQ)
-    
+
     # 1. Prove the I2C link BEFORE touching any register.
     found = i2c.scan()
     print("I2C scan:", [hex(a) for a in found])
     if SI5351_ADDR not in found:
         print("Si5351 NOT found at", hex(SI5351_ADDR),
             "-> check power, GND, and that SDA/SCL are on GP4/GP5.")
+        return None 
+    return i2c
+
+
+
+def main():
+
+    i2c = init()
+    if not i2c: #
+        print("Failed to initialize I2C.")
         return
 
     target_freq = int(input("Enter target frequency in Hz (e.g. 53500000): "))
