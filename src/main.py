@@ -20,7 +20,7 @@ XTAL_HZ          = 25_000_000
 # CLK0 target. 800 MHz / (14 + 102/107) = 53.5 MHz
 # OUT_DIV, OUT_NUM, OUT_DENOM = 14, 102, 107
 
-def init():
+def scan():
     i2c = I2C(I2C_ID, sda=Pin(SDA_PIN), scl=Pin(SCL_PIN), freq=I2C_FREQ)
 
     # 1. Prove the I2C link BEFORE touching any register.
@@ -32,22 +32,13 @@ def init():
         return None 
     return i2c
 
-
-
-def main():
-
-    i2c = init()
-    if not i2c: #
-        print("Failed to initialize I2C.")
-        return
-
-    target_freq = int(input("Enter target frequency in Hz (e.g. 53500000): "))
-    result = solve(target_freq)
-    
+def configure_si(i2c):
     # 2. Construct + initialize the chip (powers down all outputs, sets xtal load).
     si = SI5351(i2c, address=SI5351_ADDR, crystalFreq=XTAL_HZ)
     si.begin()
+    return si
 
+def apply_solution(si, result):    
     # 3. PLLA to 800 MHz, then CLK0 divider to hit 53.5 MHz.
     si.setupPLL(result[0], result[1], result[2])
     si.setupMultisynth(0, result[3],0, 1, pllsource="A")
@@ -56,7 +47,30 @@ def main():
     si.PLLsoftreset()
     si.enableOutputs(True)
 
-    print("CLK0 should now be 53.5 MHz. Scope GP-side CLK0 to confirm.")
+def main():
+
+    i2c = scan()
+    if not i2c: #
+        print("Failed to initialize I2C.")
+        return
+            
+
+    while True:
+        target_freq = (input("Enter target frequency in Hz (e.g. 53500000), or 'q' to quit: "))
+
+        if target_freq == 'q':
+            print ("Exiting program.")
+            break
+
+        target_freq = int(target_freq)
+        result = solve(target_freq)
+        si = configure_si(i2c)
+        apply_solution(si, result)
+
+        print("CLK0 should now be " + str(target_freq) + " Hz.")
+
+
+    
 
 
 if __name__ == "__main__":
