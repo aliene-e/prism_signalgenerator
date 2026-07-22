@@ -38,7 +38,7 @@ def solve(fout):
 
     vco = fms * d                          # VCO (Voltage Controlled Oscillator) frequency = fout * rdiv * d = fms * d)
     if not (600_000_000 <= vco <= 900_000_000):
-        raise ValueError("out of range (~2.3 kHz to 200 MHz)")
+        raise ValueError("Out of range (~2.3 kHz to 200 MHz)")
 
     # 3. PLL multiplier a + b/c = vco / 25 MHz; exact fraction if it fits,
     #    else the chip's best 20-bit approximation

@@ -1,7 +1,7 @@
 This document will include the following: 
-- Notes about how Python works
-- Notes about how the project contributes to the system at Fermilab
-- A "journal" of sorts documenting the general things I did on any given day
+    - Notes about how Python works
+    - Notes about how the project contributes to the system at Fermilab
+    - A "journal" of sorts documenting the general things I did on any given day
 
 Thursday 7/16/2026
     Overview: Set up VSCode + Git + Cline + any other necessary software, added user input to blink program
@@ -62,4 +62,8 @@ Tuesday 7/21/2026
     - Better visual interface
     - Other functionalities (e.g. min/max, loop the prompt, )
     - refactor out of main
+
+    9:56 PM updates:
+    - Looped prompt, refactored out of main, successfully added user input
+    - Things left to do: Better visual interface, min/max (I think the SI5351_solver already has a min or max determined maybe), fix the errors so they don't break the program off (aka, maybe just reprompt them if they entered something that would break the program ... using a try/except doesn't work for me somehow)... default configs?
     

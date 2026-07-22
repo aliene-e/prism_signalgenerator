@@ -15,10 +15,8 @@ SI5351_ADDR      = 0x60
 XTAL_HZ          = 25_000_000
 
 # PLLA: VCO = PLL_MULT * XTAL = 32 * 25 MHz = 800 MHz
-# PLL_MULT, PLL_NUM, PLL_DENOM = 32, 0, 1
 
 # CLK0 target. 800 MHz / (14 + 102/107) = 53.5 MHz
-# OUT_DIV, OUT_NUM, OUT_DENOM = 14, 102, 107
 
 def scan():
     i2c = I2C(I2C_ID, sda=Pin(SDA_PIN), scl=Pin(SCL_PIN), freq=I2C_FREQ)
@@ -38,10 +36,10 @@ def configure_si(i2c):
     si.begin()
     return si
 
-def apply_solution(si, result):    
+def apply_solution(si, a, b, c, d, rdiv):    
     # 3. PLLA to 800 MHz, then CLK0 divider to hit 53.5 MHz.
-    si.setupPLL(result[0], result[1], result[2])
-    si.setupMultisynth(0, result[3],0, 1, pllsource="A")
+    si.setupPLL(a, b, c)
+    si.setupMultisynth(0, d*rdiv, 0, 1, pllsource="A")
 
     # 4. Latch the new dividers and turn the outputs on.
     si.PLLsoftreset()
@@ -54,24 +52,38 @@ def main():
         print("Failed to initialize I2C.")
         return
             
-
     while True:
-        target_freq = (input("Enter target frequency in Hz (e.g. 53500000), or 'q' to quit: "))
-
-        if target_freq == 'q':
+        # try:
+        user_input = (input("Enter target frequency in MHz (e.g. 53.5), or 'q' to quit: "))
+        
+        if user_input == 'q':
             print ("Exiting program.")
             break
 
-        target_freq = int(target_freq)
-        result = solve(target_freq)
+        target_freq = float(user_input)
+
+        # Check if the target frequency is within the valid range (0.5 MHz to 133 MHz)
+        if (target_freq < 0.1 or target_freq >= 133):
+            print("Out of range.")
+            continue
+            
+        # except ValueError:
+            # print("Out of range. Please entire a number between ~2.3 kHz and 200 MHz.")
+            # continue
+
+        # Scale MHz to Hz
+        target_freq *= 1E6
+        try:
+            a, b, c, d, rdiv, divby4 = solve(target_freq) # Solves for the PLL and MultiSynth parameters to achieve the target frequency.
+            print("PLL: %d + %d/%d  (VCO %.6f MHz) with rdiv %d and divby4 %s" % (a, b, c, XTAL_HZ * (a + b / c) / 1e6, rdiv, "True" if divby4 else "False"))
+        except ValueError as e:
+            print("Error:", e)
+            continue
+        
         si = configure_si(i2c)
-        apply_solution(si, result)
+        apply_solution(si, a, b, c, d, rdiv)
 
         print("CLK0 should now be " + str(target_freq) + " Hz.")
-
-
-    
-
 
 if __name__ == "__main__":
     main()
