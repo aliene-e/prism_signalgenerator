@@ -66,4 +66,6 @@ Tuesday 7/21/2026
     9:56 PM updates:
     - Looped prompt, refactored out of main, successfully added user input
     - Things left to do: Better visual interface, min/max (I think the SI5351_solver already has a min or max determined maybe), fix the errors so they don't break the program off (aka, maybe just reprompt them if they entered something that would break the program ... using a try/except doesn't work for me somehow)... default configs?
+
+    - add readme. test a lot of stuff from 500 kHz to 160 MHz
     
