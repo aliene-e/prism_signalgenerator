@@ -69,3 +69,8 @@ Tuesday 7/21/2026
 
     - add readme. test a lot of stuff from 500 kHz to 160 MHz
     
+Thursday 7/23/26:
+    - pico has accelerometer, magnometer, gyroscope.. play around!
+    - one on ground (make sure to use an ADC ground) one on adc, set pin to in pin
+    - understand what in-out pins are doing... 
+    
