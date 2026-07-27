@@ -2,9 +2,10 @@
   # Put this next to the vendored si5351.py (both flashed to the Pico root).
   # Wiring: SDA=GP4 (phys pin 6), SCL=GP5 (phys pin 7).
 
-from machine import Pin, I2C
+from machine import Pin, I2C, PWM, Timer
 from SI5351 import SI5351
 from si5351_solver import solve
+
 
 
   # --- board / chip constants ---
@@ -45,6 +46,18 @@ def apply_solution(si, a, b, c, d, rdiv):
     si.PLLsoftreset()
     si.enableOutputs(True)
 
+def bitbang(target_freq):
+    out = Pin(1,Pin.OUT)
+    tim = Timer(-1)
+    timer_freq = 2*target_freq
+    tim.init(freq=timer_freq, mode=Timer.PERIODIC, callback=lambda t: out.toggle())
+
+
+def pwm(target_freq):
+    pwm = PWM(Pin(1))
+    pwm.freq(target_freq)        # frequency in Hz
+    pwm.duty_u16(32768)   # 16-bit duty: 0-65535 (32768 = 50% square wave)
+
 def main():
 
     i2c = scan()
@@ -54,7 +67,7 @@ def main():
             
     while True:
         # try:
-        user_input = (input("Enter target frequency in MHz (e.g. 53.5), or 'q' to quit: "))
+        user_input = (input("Enter target frequency in Hz (e.g. 53.5), or 'q' to quit: "))
         
         if user_input == 'q':
             print ("Exiting program.")
@@ -63,26 +76,23 @@ def main():
         target_freq = float(user_input)
 
         # Check if the target frequency is within the valid range (0.5 MHz to 133 MHz)
-        if (target_freq < 0.1 or target_freq >= 133):
+        if (target_freq < 0 or target_freq > 133000000):
             print("Out of range.")
             continue
-            
-        # except ValueError:
-            # print("Out of range. Please entire a number between ~2.3 kHz and 200 MHz.")
-            # continue
-
-        # Scale MHz to Hz
-        target_freq *= 1E6
-        try:
-            a, b, c, d, rdiv, divby4 = solve(target_freq) # Solves for the PLL and MultiSynth parameters to achieve the target frequency.
-            print("PLL: %d + %d/%d  (VCO %.6f MHz) with rdiv %d and divby4 %s" % (a, b, c, XTAL_HZ * (a + b / c) / 1e6, rdiv, "True" if divby4 else "False"))
-        except ValueError as e:
-            print("Error:", e)
-            continue
+        elif target_freq < 8:
+            bitbang(target_freq)
+        elif target_freq < 10_000_000:
+            pwm(int(target_freq))
+        else:
+            try:
+                a, b, c, d, rdiv, divby4 = solve(target_freq) # Solves for the PLL and MultiSynth parameters to achieve the target frequency.
+                print("PLL: %d + %d/%d  (VCO %.6f MHz) with rdiv %d and divby4 %s" % (a, b, c, XTAL_HZ * (a + b / c) / 1e6, rdiv, "True" if divby4 else "False"))
+                si = configure_si(i2c)
+                apply_solution(si, a, b, c, d, rdiv)
+            except ValueError as e:
+                print("Error:", e)
+                continue
         
-        si = configure_si(i2c)
-        apply_solution(si, a, b, c, d, rdiv)
-
         print("CLK0 should now be " + str(target_freq) + " Hz.")
 
 if __name__ == "__main__":

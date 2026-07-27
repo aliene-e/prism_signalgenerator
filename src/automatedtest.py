@@ -69,7 +69,7 @@ def main():
         apply_solution(si, a, b, c, d, rdiv)
 
         print("CLK0 should now be " + str(target_freq) + " Hz.")
-        sleep(5)
+        sleep(10)
 
 if __name__ == "__main__":
     main()

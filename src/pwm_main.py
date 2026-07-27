@@ -16,8 +16,8 @@ def main():
             out = Pin(1, Pin.OUT)
             tim = Timer(-1)
             # Toggle at 2 Hz -> one full high/low cycle per second = 1 Hz square wave
-            target_freq *= 2
-            tim.init(freq=target_freq, mode=Timer.PERIODIC, callback=lambda t: out.toggle())
+            timer_freq = 2*target_freq
+            tim.init(freq=timer_freq, mode=Timer.PERIODIC, callback=lambda t: out.toggle())
         elif target_freq >= 8 and target_freq < 10_000_000:
             
             pwm = PWM(Pin(1))
