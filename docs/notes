@@ -73,4 +73,12 @@ Thursday 7/23/26:
     - pico has accelerometer, magnometer, gyroscope.. play around!
     - one on ground (make sure to use an ADC ground) one on adc, set pin to in pin
     - understand what in-out pins are doing... 
+
+Monday 7/27/26:
+    - Orange (7): SCL, Yellow (6): SDA, Red: Power, Brown: Ground
+    Notes on the clocks:
+    - Seems like the clocks don't work super well with abrupt changes in frequency, and the low frequency stuff doesn't work super well at really small frequencies (e.g. below 5)
+        - Clock board: above 60 MHz
+        - Bitbanging: below 5Hz
+    - Build out user interfaces, block diagram (UML) for board AND code
     

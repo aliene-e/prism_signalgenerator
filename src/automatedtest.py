@@ -53,7 +53,7 @@ def main():
         print("Failed to initialize I2C.")
         return
             
-    input_freqs = [0.1,0.5,0.9,1.,5.,10.,40.,100.] # Made list of frequencies to test the SI5351 with in MHz.
+    input_freqs = [1.,5.,10.,40.,50.,60.,70.,100.] # Made list of frequencies to test the SI5351 with in MHz.
 
     for target_freq in input_freqs:
         # Scale MHz to Hz

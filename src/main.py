@@ -76,7 +76,7 @@ def main():
         target_freq = float(user_input)
 
         # Check if the target frequency is within the valid range (0.5 MHz to 133 MHz)
-        if (target_freq < 0 or target_freq > 133000000):
+        if (target_freq < 0 or target_freq > 133_000_000):
             print("Out of range.")
             continue
         elif target_freq < 8:
