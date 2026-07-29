@@ -81,4 +81,11 @@ Monday 7/27/26:
         - Clock board: above 60 MHz
         - Bitbanging: below 5Hz
     - Build out user interfaces, block diagram (UML) for board AND code
+
+Tuesday 7/28/26:
+    - CREATE abstract!
+    Notes for improving the clocks:
+    - Just try to fix the ranges so they're stable at lower frequencies and at like 100 MHz
+    - Thingaverse = free 3d Modeling website. TinyML = tiny machine learning onto tiny embedded systems
+    - Boards tested on friday!
     
