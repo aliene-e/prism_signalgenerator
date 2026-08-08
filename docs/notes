@@ -88,4 +88,18 @@ Tuesday 7/28/26:
     - Just try to fix the ranges so they're stable at lower frequencies and at like 100 MHz
     - Thingaverse = free 3d Modeling website. TinyML = tiny machine learning onto tiny embedded systems
     - Boards tested on friday!
-    
+
+Wednesday 7/29/26:
+    - get the other clocks to work, 
+
+Tuesday 8/4/26:
+    - PSEUDOCODE
+
+*** Pseudocode for PLL ***
+    XTAL = 25 MHz (Given)
+    VCO = 900 MHz (in the range of 600-900 MHz)
+    PLL Multiplier = VCO/XTAL
+    Multisynth Output Divider = Integer(VCO/Target_Frequency)
+
+
+

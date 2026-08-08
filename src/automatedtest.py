@@ -53,14 +53,14 @@ def main():
         print("Failed to initialize I2C.")
         return
             
-    input_freqs = [1.,5.,10.,40.,50.,60.,70.,100.] # Made list of frequencies to test the SI5351 with in MHz.
+    input_freqs = [1.334,5.55431,10.,40.,50.,60.,70.,100.] # Made list of frequencies to test the SI5351 with in MHz.
 
     for target_freq in input_freqs:
         # Scale MHz to Hz
         target_freq *= 1E6
         try:
             a, b, c, d, rdiv, divby4 = solve(target_freq) # Solves for the PLL and MultiSynth parameters to achieve the target frequency.
-            print("PLL: %d + %d/%d  (VCO %.6f MHz) with rdiv %d and divby4 %s" % (a, b, c, XTAL_HZ * (a + b / c) / 1e6, rdiv, "True" if divby4 else "False"))
+            print("PLL: %d + %d/%d  with divider %d (VCO %.6f MHz) with rdiv %d and divby4 %s" % (a, b, c, d, XTAL_HZ * (a + b / c) / 1e6, rdiv, "True" if divby4 else "False"))
         except ValueError as e:
             print("Error:", e)
             continue
